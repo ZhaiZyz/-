@@ -1,21 +1,381 @@
-HOST-SUFFIX,gmail.com,Global
-HOST-SUFFIX,gmodules.com,Global
-HOST-SUFFIX,go.com,Global
-HOST-SUFFIX,godoc.org,Global
-HOST-SUFFIX,gog.com,Global
-HOST-SUFFIX,golang.org,Global
-HOST-SUFFIX,goo.ne.jp,Global
-HOST-SUFFIX,goodreads.com,Global
-HOST-SUFFIX,google,Global
-HOST-SUFFIX,googleapis.cn,Global
-HOST-SUFFIX,googlevideo.com,Global
-HOST-SUFFIX,gov,Global
-HOST-SUFFIX,gov.tw,Global
-HOST-SUFFIX,greatfire.org,Global
-HOST-SUFFIX,gstatic.com,Global
-HOST-SUFFIX,gumroad.com,Global
-HOST-SUFFIX,gv.com,Global
-HOST-SUFFIX,gvt0.com,Global
-HOST-SUFFIX,gvt1.com,Global
-HOST-SUFFIX,gvt3.com,Global
-HOST-SUFFIX,gwtproject.org,Global
+# Sample Quantumult Configuration
+#
+# Line started with ";" or "#" or "//" shall be comments.
+# 以 ";" 或 "#" 或 "//" 开头的行为注释行。
+#
+# SS-URI scheme can be found at https://shadowsocks.org/en/spec/SIP002-URI-Scheme.html
+#
+# Quantumult uses HEAD method send HTTP request to the server_check_url to test the proxy's status, the results should be two latencies, the first one is TCP handshake to the proxy server, the second one is the total time that Quantumult successfully received the HTTP response from the server_check_url. The lightning icon means that the TCP fast open is successful. If the server in section [server_local] or section [server_remote] has its own server_check_url, its own server_check_url will be used instead of the server_check_url in section [general].
+#
+# Quantumult 使用 HTTP HEAD 方法对测试网址 server_check_url 进行网页响应性测试（测试结果为通过该节点访问此网页获得 HTTP 响应所需要的时间），来确认节点的可用性。
+# Quantumult 界面中的延迟测试方式均为网页响应性测试，显示的最终延迟均为通过对应节点访问测试网页获得 HTTP 响应所需要时间。
+# 由于 Trojan 协议为无响应校验协议，使得 HTTP 检测方式即使获得了 HTTP 响应，也不代表节点一定可用。
+#
+# The dns_exclusion_list contains the domains that disabled the placeholder IP(240.*), domains that are not in the dns_exclusion_list all have placeholder IP enabled and have turned on the resolve-on-remote setting.
+#
+# The udp_whitelist contains the destination UDP port, empty means all the ports are in udp_whitelist. UDP packtes(through Quantumult tunnel interface) with destination ports that are not in the udp_whitelist will be dropped. This setting has nothing to do with the policy and has nothing to do with the proxy(server) port either.
+#
+# The traffic to excluded_routes will not be handled by Quantumult. It is better to reboot your device after modification.
+#
+# The resource_parser_url sample can be found at https://raw.githubusercontent.com/crossutility/Quantumult-X/master/resource-parser.js
+
+[general]
+udp_whitelist=53,123,81-442,444-65535
+
+#IP_bili_cn js-用于获取、展示节点信息
+geo_location_checker= http://api.live.bilibili.com/ip_service/v1/ip_service/get_ip_addr? , https://raw.githubusercontent.com/KOP-XIAO/QuantumultX/master/Scripts/IP_bili_cn.js
+server_check_url= http://www.gstatic.com/generate_404
+resource_parser_url= https://raw.githubusercontent.com/KOP-XIAO/QuantumultX/master/Scripts/resource-parser.js
+
+
+
+# The DNS servers fetched from current network(system) will always be used for better performance(you can disable this feature by using "no-system", but you should at least add one customized DNS server like "server=223.5.5.5").
+# When no-ipv6 is set, the DNS module of Quanumult X Tunnel will directly let the AAAA query fail but still allow the A query from IPv6 DNS servers.
+# The result of query will only be used for evaluating filter or connecting through direct policy, when connecting through server the result will not be used and Quantumult will never know the destination IP of related domain.
+# Specially directly set 127.0.0.1 for a domain is not allowed in here. if you want some domain(eg: example.com) to be 127.0.0.1, just add "host, example.com, reject" to the "filter_local" section. The reject action will return DNS response with 127.0.0.1 to the query.
+#
+[dns]
+;no-system
+no-ipv6
+server=1.2.4.8
+server=119.29.29.29
+server=223.5.5.5
+server=114.114.114.114
+
+
+
+;server=8.8.4.4:53
+;server=/example0.com/system
+;server=/example1.com/8.8.4.4
+;server=/*.example2.com/223.5.5.5
+;server=/example4.com/[2001:4860:4860::8888]:53
+;address=/example5.com/192.168.16.18
+;address=/example6.com/[2001:8d3:8d3:8d3:8d3:8d3:8d3:8d3]
+
+#
+# static policy points to the server in candidates you manually selected.
+# available policy points to the first available server in candidates based on server_check_url(concurrent url latency test will be immediately launched when the policy has been triggered and the policy result is unavailable. If no network request is taking the policy at that time, that means the policy is in the idle state and the test won't be launched even if the server is down. At that time you can update the server status by manually launching the test, but it doesn't make any sense).
+# round-robin policy points to the next server in candidates for next connection.
+# ssid policy points to the server depending on the network environment.
+# Param resource-tag-regex and server-tag-regex only work for static, available and round-robin type of polices.
+#
+[policy]
+static=Final, proxy, direct, img-url=https://github.com/Aoyt520/jiumeiquanX/raw/master/quanX/Advertising.png
+static=Global, proxy, 美国, img-url=https://github.com/Aoyt520/jiumeiquanX/raw/master/quanX/Gwwz.png
+static=网易云音乐, direct, 🎧𝐌𝐮𝐬𝐢𝐜𝟏, 🎧𝐌𝐮𝐬𝐢𝐜𝟐, 🎧𝐌𝐮𝐬𝐢𝐜𝟑, 🎧𝐌𝐮𝐬𝐢𝐜𝟒, 🎧𝐌𝐮𝐬𝐢𝐜𝟓, 🎧𝐌𝐮𝐬𝐢𝐜𝟔, 🎧𝐌𝐮𝐬𝐢𝐜𝟕, 🎧𝐌𝐮𝐬𝐢𝐜𝟖, img-url=https://github.com/Aoyt520/jiumeiquanX/raw/master/quanX/Hijacking.png
+static=Netflix, proxy, 台湾, img-url=https://github.com/Aoyt520/jiumeiquanX/raw/master/quanX/Netflix.png
+available=台湾, resource-tag-regex=miaona, server-tag-regex=台, img-url=https://github.com/Aoyt520/jiumeiquanX/raw/master/quanX/CHINAX.png
+available=美国, resource-tag-regex=miaona, server-tag-regex=美国, img-url=https://github.com/Aoyt520/jiumeiquanX/raw/master/quanX/USAX.png
+;static=policy-name-1, Sample-A, Sample-B, Sample-C, img-url=http://example.com/icon.png
+;available=policy-name-2, Sample-A, Sample-B, Sample-C
+;round-robin=policy-name-3, Sample-A, Sample-B, Sample-C
+;ssid=policy-name-4, Sample-A, Sample-B, LINK_22E171:Sample-B, LINK_22E172:Sample-C
+;static=policy-name-5, resource-tag-regex=^sample, server-tag-regex=^example, img-url=http://example.com/icon.png
+;available=policy-name-6, resource-tag-regex=^sample, server-tag-regex=^example
+;round-robin=policy-name-7, resource-tag-regex=^sample, server-tag-regex=^example
+
+#
+# Params "tag" and "enabled" are optional.
+# The default sync interval for all kinds of remote resources is 86400 seconds.
+# You can set update-interval=172800 to customize your auto sync interval(seconds), negative number means disable auto sync.
+#
+[server_remote]
+https://miaona.xyz/api/v1/client/subscribe?token=fb57e3c22a284540602c5700c372fd43, tag=miaona, img-url=https://github.com/Orz-3/mini/raw/master/hitun.png, update-interval=86400, opt-parser=false, enabled=true
+https://lmout.xyz/api/v1/client/subscribe?token=cf063cca20eba23d8735fb3a63d17b91, tag=乐米奥94, img-url=https://github.com/Orz-3/mini/raw/master/hitun.png, update-interval=86400, opt-parser=false, enabled=true
+https://sub.xn--9kq61slq0c.com/api/v1/client/subscribe?token=f40a0e911a46c207d3845080bbc6db94, tag=土豆云12.10, img-url=https://github.com/Orz-3/mini/raw/master/hitun.png, update-interval=86400, opt-parser=false, enabled=true
+https://sockboom.me/link/BFq2I7O4vy6cCKFF?mu=1, tag=Sockboom, img-url=https://github.com/Orz-3/mini/raw/master/hitun.png, update-interval=86400, opt-parser=true, enabled=true
+https://git.io/JfNq3, tag=网易云节点, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Netease.png, update-interval=86400, opt-parser=true, enabled=true
+
+
+
+
+;https://raw.githubusercontent.com/crossutility/Quantumult-X/master/server.txt, tag=Sample-01
+;https://raw.githubusercontent.com/crossutility/Quantumult-X/master/server.txt, opt-parser=true, tag=Sample-01
+;https://raw.githubusercontent.com/crossutility/Quantumult-X/master/server.txt, update-interval=-1, tag=Sample-01
+;https://raw.githubusercontent.com/crossutility/Quantumult-X/master/server-complete.txt, tag=Sample-02, as-policy=static, img-url=http://example.com/icon.png, enabled=false
+
+#
+# Params "tag", "force-policy" and "enabled" are optional.
+# When there is a force-policy, then the policy in filter of remote resource will be ignored and the force-policy will be used.
+#
+[filter_remote]
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Netflix/Netflix.list, tag=Netflix, force-policy=Netflix, update-interval=86400, opt-parser=false, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Global/Global.list, tag=全球, force-policy=Global, update-interval=86400, opt-parser=false, enabled=true
+https://raw.githubusercontent.com/Hedilict/QuantumultX/master/Filter/NetEaseCloudMusic.list, tag=网易云音乐, force-policy=网易云音乐, update-interval=86400, opt-parser=false, enabled=true
+;https://raw.githubusercontent.com/crossutility/Quantumult-X/master/filter.txt, tag=Sample, force-policy=your-policy-name, enabled=true
+
+#
+# Params "tag" and "enabled" are optional.
+#
+[rewrite_remote]
+芝麻视频, update-interval=86400, opt-parser=true, enabled=false
+京喜财富岛, update-interval=86400, opt-parser=true, enabled=false
+抖音火山版, update-interval=86400, opt-parser=true, enabled=false
+https://raw.githubusercontent.com/erdongchanyo/Rules/main/Quantumult%20X/xp/xp_header.conf, tag=笑谱, update-interval=86400, opt-parser=false, enabled=false
+https://raw.githubusercontent.com/erdongchanyo/Rules/main/Quantumult%20X/xp/xp_token.conf, tag=笑谱, update-interval=86400, opt-parser=false, enabled=false
+https://raw.githubusercontent.com/ChuheGit/1/main/Surge/Module/Cookie.sgmodule, tag=锄禾cookie, update-interval=86400, opt-parser=true, enabled=false
+https://raw.githubusercontent.com/LXK9301/jd_scripts/master/QuantumultX/lxk0301_cookies.conf, tag=京东cookie, update-interval=86400, opt-parser=false, enabled=false
+LXK, tag=京东, update-interval=86400, opt-parser=false, enabled=true
+返利网, update-interval=86400, opt-parser=false, enabled=false
+步步宝, update-interval=86400, opt-parser=true, enabled=false
+https://raw.githubusercontent.com/erdongchanyo/Rules/main/Quantumult%20X/Youth/Youth_GetBody.conf, tag=中青自动阅读, update-interval=86400, opt-parser=false, enabled=false
+https://raw.githubusercontent.com/erdongchanyo/Rules/main/Quantumult%20X/Youth/Youth_cookie.conf, tag=中青, update-interval=86400, opt-parser=false, enabled=false
+https://raw.githubusercontent.com/CenBoMin/GithubSync/main/CONGHUA/GetBody.conf, tag=葱花视频, update-interval=86400, opt-parser=false, enabled=false
+汽车之家, tag=汽车之家极速版, update-interval=86400, opt-parser=false, enabled=false
+https://raw.githubusercontent.com/humanvip/no.1/main/cookie.conf, tag=聚看点, update-interval=86400, opt-parser=false, enabled=false
+https://raw.githubusercontent.com/Orz-3/QuantumultX/master/TikTok.conf, tag=tiktok, update-interval=86400, opt-parser=true, enabled=true
+https://raw.githubusercontent.com/crossutility/Quantumult-X/master/sample-import-rewrite.txt, update-interval=86400, opt-parser=false, enabled=true
+https://github.com/DivineEngine/Profiles/raw/master/Quantumult/Rewrite/Block/YouTubeAds.conf, tag=Youtube去广告, update-interval=86400, opt-parser=false, enabled=true
+https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.quanx.conf, tag=box.js, update-interval=86400, opt-parser=false, enabled=true
+https://subweb.oss-cn-hongkong.aliyuncs.com/Module/embyUnlocked.conf, tag=emby普拉斯, update-interval=86400, opt-parser=false, enabled=true
+淘宝京东比价, tag=淘宝京东比价, update-interval=86400, opt-parser=true, enabled=true
+;https://raw.githubusercontent.com/crossutility/Quantumult-X/master/sample-import-rewrite.txt, tag=Sample, enabled=true
+
+#
+# Only obfs=http, obfs=ws, obfs=wss can have optional "obfs-uri" field.
+# The obfs-host param in wss will be used for TLS handshake and for HTTP header host field, if obfs-host is not set for wss the server address will be used.
+# The UDP relay for VMess and Trojan is not currently supported.
+# When using obfs=ws and obfs=wss the server side can be deployed by v2ray-plugin with mux = 0 or by v2ray-core.
+# The obfs plugin tls1.2_ticket_auth has one more RTT than tls1.2_ticket_fastauth and obfs tls, you'd better use tls1.2_ticket_fastauth instead.
+# The method chacha20-ietf-poly1305 and chacha20-poly1305 have the same effect in VMess configuration.
+#
+[server_local]
+
+# Optional field tls13 is only for shadowsocks obfs=wss
+;shadowsocks=example.com:80, method=chacha20, password=pwd, obfs=http, obfs-host=bing.com, obfs-uri=/resource/file, fast-open=false, udp-relay=false, server_check_url=http://www.apple.com/generate_204, tag=ss-01
+;shadowsocks=example.com:80, method=chacha20, password=pwd, obfs=http, obfs-host=bing.com, obfs-uri=/resource/file, fast-open=false, udp-relay=false, tag=ss-02
+;shadowsocks=example.com:443, method=chacha20, password=pwd, obfs=tls, obfs-host=bing.com, fast-open=false, udp-relay=false, tag=ss-03
+;shadowsocks=example.com:443, method=chacha20, password=pwd, ssr-protocol=auth_chain_b, ssr-protocol-param=def, obfs=tls1.2_ticket_fastauth, obfs-host=bing.com, tag=ssr
+;shadowsocks=example.com:80, method=aes-128-gcm, password=pwd, obfs=ws, fast-open=false, udp-relay=false, tag=ss-ws-01
+;shadowsocks=example.com:80, method=aes-128-gcm, password=pwd, obfs=ws, obfs-uri=/ws, fast-open=false, udp-relay=false, tag=ss-ws-02
+;shadowsocks=example.com:443, method=aes-128-gcm, password=pwd, obfs=wss, obfs-uri=/ws, fast-open=false, udp-relay=false, tag=ss-ws-tls-01
+;shadowsocks=example.com:443, method=aes-128-gcm, password=pwd, obfs=wss, obfs-uri=/ws, tls13=true, fast-open=false, udp-relay=false, tag=ss-ws-tls-02
+#
+# Optional field tls13 is only for vmess obfs=over-tls and obfs=wss
+;vmess=example.com:80, method=none, password=23ad6b10-8d1a-40f7-8ad0-e3e35cd32291, fast-open=false, udp-relay=false, tag=vmess-01
+;vmess=example.com:80, method=aes-128-gcm, password=23ad6b10-8d1a-40f7-8ad0-e3e35cd32291, fast-open=false, udp-relay=false, tag=vmess-02
+;vmess=example.com:443, method=none, password=23ad6b10-8d1a-40f7-8ad0-e3e35cd32291, obfs=over-tls, fast-open=false, udp-relay=false, tag=vmess-tls-01
+;vmess=192.168.1.1:443, method=none, password=23ad6b10-8d1a-40f7-8ad0-e3e35cd32291, obfs=over-tls, obfs-host=example.com, fast-open=false, udp-relay=false, tag=vmess-tls-02
+;vmess=192.168.1.1:443, method=none, password=23ad6b10-8d1a-40f7-8ad0-e3e35cd32291, obfs=over-tls, obfs-host=example.com, tls13=true, fast-open=false, udp-relay=false, tag=vmess-tls-03
+;vmess=example.com:80, method=chacha20-poly1305, password=23ad6b10-8d1a-40f7-8ad0-e3e35cd32291, obfs=ws, obfs-uri=/ws, fast-open=false, udp-relay=false, tag=vmess-ws-01
+;vmess=192.168.1.1:80, method=chacha20-poly1305, password=23ad6b10-8d1a-40f7-8ad0-e3e35cd32291, obfs=ws, obfs-host=example.com, obfs-uri=/ws, fast-open=false, udp-relay=false, tag=vmess-ws-02
+;vmess=example.com:443, method=chacha20-poly1305, password=23ad6b10-8d1a-40f7-8ad0-e3e35cd32291, obfs=wss, obfs-uri=/ws, fast-open=false, udp-relay=false, tag=vmess-ws-tls-01
+;vmess=192.168.1.1:443, method=chacha20-poly1305, password=23ad6b10-8d1a-40f7-8ad0-e3e35cd32291, obfs=wss, obfs-host=example.com, obfs-uri=/ws, fast-open=false, udp-relay=false, tag=vmess-ws-tls-02
+;vmess=192.168.1.1:443, method=chacha20-poly1305, password=23ad6b10-8d1a-40f7-8ad0-e3e35cd32291, obfs=wss, obfs-host=example.com, obfs-uri=/ws, tls13=true, fast-open=false, udp-relay=false, tag=vmess-ws-tls-03
+#
+# Optional field tls13 is only for http over-tls=true
+;http=example.com:80,fast-open=false, udp-relay=false, tag=http-01
+;http=example.com:80, username=name, password=pwd, fast-open=false, udp-relay=false, tag=http-02
+;http=example.com:443, username=name, password=pwd, over-tls=true, tls-host=example.com, tls-verification=true, fast-open=false, udp-relay=false, tag=http-tls-01
+;http=example.com:443, username=name, password=pwd, over-tls=true, tls-host=example.com, tls-verification=true, tls13=true, fast-open=false, udp-relay=false, tag=http-tls-02
+#
+# Optional field tls13 is only for trojan over-tls=true
+;trojan=example.com:443, password=pwd, over-tls=true, tls-verification=true, fast-open=false, udp-relay=false, tag=trojan-tls-01
+;trojan=example.com:443, password=pwd, over-tls=true, tls-verification=true, tls13=true, fast-open=false, udp-relay=false, tag=trojan-tls-02
+;trojan=192.168.1.1:443, password=pwd, over-tls=true, tls-host=example.com, tls-verification=true, fast-open=false, udp-relay=false, tag=trojan-tls-03
+;trojan=192.168.1.1:443, password=pwd, over-tls=true, tls-host=example.com, tls-verification=true, tls13=true, fast-open=false, udp-relay=false, tag=trojan-tls-04
+
+[filter_local]
+host-suffix, local, direct
+ip-cidr, 10.0.0.0/8, direct
+ip-cidr, 127.0.0.0/8, direct
+ip-cidr, 172.16.0.0/12, direct
+ip-cidr, 192.168.0.0/16, direct
+ip-cidr, 224.0.0.0/24, direct
+geoip, cn, direct
+final, Final
+
+
+#
+# The "reject" returns HTTP status code 404 with no content.
+# The "reject-200" returns HTTP status code 200 with no content.
+# The "reject-img" returns HTTP status code 200 with content of 1px gif.
+# The "reject-dict" returns HTTP status code 200 with content of empty json object.
+# The "reject-array" returns HTTP status code 200 with content of empty json array.
+# The "request-header" works for all the http headers not just one single header, so you can match two or more headers including CRLF in one regular expression.
+# The "echo-response" just reply back the body of the content type response for matched URL, the body file should be saved at "On My iPhone - Quantumult X - Data".
+# The length and encoding related HTTP header fields will be automatically processed by Quantumult if the "rewrite" is body related, so you should not handle them by yourself. The max supported response size is 1024kB(decompressed) for response-body and script-response-body.
+# The body related rewrite will not be executed if the body is empty.
+# When using javascript in rewrite, you can use those objects: $request, $response, $notify(title, subtitle, message), console.log(message) and Quantumult's built-in objects all have prefix "$".
+# Supports: $request.scheme, $request.method, $request.url, $request.path, $request.headers, $response.statusCode, $response.headers, $response.body
+# The $notify(title, subtitle, message) will post iOS notifications if Quantumult notification has been enabled.
+# The $prefs is for persistent store: $prefs.valueForKey(key), $prefs.setValueForKey(value, key), $prefs.removeValueForKey(key), $prefs.removeAllValues().
+# The console.log(message)  will output logs to Quantumult log file.
+# The setTimeout(function() { }, interval) will run function after interval(ms).
+# The scripts for script-request-header, script-request-body, script-response-header, script-response-body, script-echo-response and script-analyze-echo-response should be saved in local "On My iPhone - Quantumult X - Scripts" or "iCloud Drive - Quantumult X - Scripts". Samples can be found at https://github.com/crossutility/Quantumult-X
+# The difference between script-analyze-echo-response and script-echo-response is that the former will wait for the request body.
+#
+[rewrite_local]
+# 京东价格
+# 获取京东Cookie. 
+# 注意此为远程路径, 低版本用户请自行调整为本地路径.
+https:\/\/api\.m\.jd\.com\/client\.action.*functionId=signBean - script-request-header https://raw.githubusercontent.com/NobyDa/Script/master/JD-DailyBonus/JD_DailyBonus.js
+
+;^http://example\.com/resource1/1/ url reject
+;^http://example\.com/resource1/2/ url reject-img
+;^http://example\.com/resource1/3/ url reject-200
+;^http://example\.com/resource1/4/ url reject-dict
+;^http://example\.com/resource1/5/ url reject-array
+;^http://example\.com/resource2/ url 302 http://example.com/new-resource2/
+;^http://example\.com/resource3/ url 307 http://example.com/new-resource3/
+;^http://example\.com/resource4/ url request-header ^GET /resource4/ HTTP/1\.1(\r\n) request-header GET /api/ HTTP/1.1$1
+;^http://example\.com/resource4/ url request-header (\r\n)User-Agent:.+(\r\n) request-header $1User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36$2
+;^http://example\.com/resource5/ url request-body "info":\[.+\],"others" request-body "info":[],"others"
+;^http://example\.com/resource5/ url response-body "info":\[.+\],"others" response-body "info":[],"others"
+;^http://example\.com/resource5/ url echo-response text/html echo-response index.html
+;^http://example\.com/resource6/ url script-response-body response-body.js
+;^http://example\.com/resource7/ url script-echo-response script-echo.js
+;^http://example\.com/resource8/ url script-response-header response-header.js
+;^http://example\.com/resource9/ url script-request-header request-header.js
+;^http://example\.com/resource10/ url script-request-body request-body.js
+
+
+
+#
+# The $task.fetch() compose a HTTP request and deal with the response, only text body is supported. A $task.fetch() can be embeded in the completion handler of another $task.fetch(), if you want serial requests not current requests.
+# The scripts should be saved in local "On My iPhone - Quantumult X - Scripts" or "iCloud Drive - Quantumult X - Scripts". Samples can be found at https://github.com/crossutility/Quantumult-X/blob/master/sample-task.js
+# The default HTTP request timeout is 10 seconds.
+#
+# Supports 5 or 6 fields of cron excluding the command field.
+#
+[task_local]
+0 */1 * * * https://raw.githubusercontent.com/age174/-/main/zmsp.js, tag=芝嫲视频, img-url=https://s3.ax1x.com/2021/02/06/yYzeWn.png, enabled=true
+0 9,12,20,21 * * * https://qxzy.top/rules/QuantumultX/js/jd_nian.js, tag=京东炸年兽🧨, img-url=https://qxzy.top/rules/QuantumultX/img/jd_nian.png, enabled=true
+30 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_xgyl.js, tag=小鸽有礼2, img-url=https://raw.githubusercontent.com/ChuheGit/1/main/QuantumultX/Gallery/API-Icon/jd_xgyl.png, enabled=true
+*/5 6-23 * * * https://raw.githubusercontent.com/ZhiYi-N/Private-Script/master/Scripts/huoshan.js, tag=抖音火山版, img-url=https://gitee.com/ydj0602/hym/raw/img/DYHSB.PNG, enabled=true
+11 1 * * * https://raw.githubusercontent.com/yangtingxiao/QuantumultX/master/scripts/jd/jd_lotteryMachine.js, tag=抽奖机, img-url=https://raw.githubusercontent.com/ChuheGit/1/main/QuantumultX/Gallery/API-Icon/jd_lotteryMachine.png, enabled=true
+*/20 8-23 * * * https://raw.githubusercontent.com/ziye12/JavaScript/main/Task/iboxpay.js, tag=笑谱, enabled=true
+0 0 9,12,16,20 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney_lottery.js, tag=京东压岁钱抢百元卡, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+20 8,12 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney.js, tag=京东压岁钱, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+0 9,12,18 * * * https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_nc.js, tag=京喜农场, img-url=https://raw.githubusercontent.com/ChuheGit/1/main/QuantumultX/Gallery/API-Icon/jx_nc.png, enabled=false
+3 0 * * * * https://raw.githubusercontent.com/moposmall/Script/main/Me/jx_cfd.js, tag=京喜财富岛, img-url=https://raw.githubusercontent.com/ChuheGit/1/main/QuantumultX/Gallery/API-Icon/jx_cfd.png, enabled=true
+0 1,18 * * * https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_factory_component.js, tag=京喜工厂plus, img-url=https://raw.githubusercontent.com/ChuheGit/1/main/QuantumultX/Gallery/API-Icon/jx_factory_component.png, enabled=true
+10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bean_home.js, tag=领京豆额外奖励, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_bean_home.png, enabled=true
+1 8,12,18 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js, tag=口袋书店, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js, tag=京东汽车, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true
+2 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_cash.js, tag=签到领现金, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+5 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_club_lottery.js, tag=摇京豆, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdyjd.png, enabled=true
+10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js, tag=crazyJoy任务, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_crazy_joy.png, enabled=true
+10 * * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_dreamFactory.js, tag=京喜工厂, img-url=https://github.com/58xinian/icon/raw/master/jdgc.png, enabled=true
+5 6-18/6 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_fruit.js, tag=东东农场, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdnc.png, enabled=true
+20 13 * * 6 https://gitee.com/lxk0301/jd_scripts/raw/master/jd_get_share_code.js, tag=获取互助码, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+10 * * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_jdfactory.js, tag=东东工厂, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_factory.png, enabled=true
+10 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_jdzz.js, tag=京东赚赚, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdzz.png, enabled=true
+15 0-23/2 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy.js, tag=京东宠汪汪, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdcww.png, enabled=true
+15 0-23/1 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy_feedPets.js, tag=京东宠汪汪喂食, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdcww.png, enabled=true
+0 0-16/8 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy_reward.js, tag=宠汪汪积分兑换奖品, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdcww.png, enabled=true
+15 10 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy_run.js, tag=宠汪汪邀请助力与赛跑助力, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdcww.png, enabled=true
+0 0-10/2 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy_steal.js, tag=宠汪汪偷好友积分与狗粮, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdcww.png, enabled=false
+0 9,12,18 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_jxnc.js, tag=京喜农场, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxnc.png, enabled=false
+10 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_kd.js, tag=京东快递签到, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_kd.png, enabled=true
+10-20/5 12 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_live.js, tag=京东直播, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+3 0-23/2 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_moneyTree.js, tag=京东摇钱树, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdyqs.png, enabled=true
+10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_ms.js, tag=京东秒秒币, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/master/Icon/shylocks/jd_ms.jpg, enabled=true
+10 0,20 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_necklace.js, tag=点点券, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+1 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nh.js, tag=京东年货节, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+15 6-18/6 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pet.js, tag=东东萌宠, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdmc.png, enabled=true
+12 * * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pigPet.js, tag=京东金融养猪猪, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdyz.png, enabled=true
+1 7-21/2 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_plantBean.js, tag=种豆得豆, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdzd.png, enabled=true
+1 1 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_redPacket.js, tag=京东全民开红包, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true
+20 8 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_sgmh.js, tag=闪购盲盒, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+10 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_shop.js, tag=进店领豆, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_shop.png, enabled=true
+16 22 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_small_home.js, tag=东东小窝, img-url=https://raw.githubusercontent.com/58xinian/icon/master/ddxw.png, enabled=true
+8 0-23/3 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_speed.js, tag=京东天天加速, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdjs.png, enabled=true
+11 1-23/5 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_superMarket.js, tag=东东超市, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxc.png, enabled=true
+59 59 23 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_blueCoin.js, tag=东东超市兑换奖品, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxc.png, enabled=false
+10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_syj.js, tag=赚京豆, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_syj.png, enabled=true
+55 23 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_unsubscribe.js, tag=取关京东店铺商品, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+5 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_xg.js, tag=小鸽有礼, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/master/Icon/shylocks/jd_xg.jpg, enabled=true
+5 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js, tag=京喜签到, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+2 9 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bean_change.js, tag=京豆变动通知, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+10 6-23 * * * https://raw.githubusercontent.com/Sunert/Scripts/master/Task/baidu_speed.js, tag=百度极速版, img-url=https://raw.githubusercontent.com/ChuheGit/1/main/QuantumultX/Gallery/API-Icon/baidu_speed.png, enabled=true
+10 7 * * * https://raw.githubusercontent.com/ziye12/JavaScript/main/Task/flw.js, tag=返利网, enabled=true
+10 9 * * * https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/script/didichuxing/didi_checkin.js, tag=滴滴出行, img-url=https://raw.githubusercontent.com/ChuheGit/1/main/QuantumultX/Gallery/API-Icon/didi_checkin.png, enabled=true
+*/30 6-23 * * * https://raw.githubusercontent.com/CenBoMin/GithubSync/main/CONGHUA/chonghua.js, tag=葱花视频, img-url=https://raw.githubusercontent.com/ChuheGit/1/main/QuantumultX/Gallery/API-Icon/chonghua.png, enabled=true
+0 8-23/2 * * * https://raw.githubusercontent.com/adwktt/adwktt/master/BBB.js, tag=步步宝, img-url=https://raw.githubusercontent.com/ChuheGit/1/main/QuantumultX/Gallery/API-Icon/BBB.png, enabled=true
+#获取互助码
+# 中青签到&转盘宝箱
+*/10 * * * * https://raw.githubusercontent.com/CenBoMin/QuantumultX/master/Scripts/Youth/youth.js, tag=中青签到&转盘宝箱, img-url=https://raw.githubusercontent.com/Orz-3/task/master/youth.png, enabled=true
+
+# 中青自动阅读
+10 1-23 * * * https://raw.githubusercontent.com/CenBoMin/QuantumultX/master/Scripts/Youth/Youth_AutoRead.js, tag=中青自动阅读, img-url=https://raw.githubusercontent.com/Orz-3/task/master/youth.png, enabled=true
+# 葱花视频
+*/5 * * * * https://raw.githubusercontent.com/ziye12/QCZJSPEED/main/Task/qczjspeed.js, tag=汽车之家, enabled=true
+0 5 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/suning/suning.js, tag=苏宁易购, img-url=https://raw.githubusercontent.com/HotKids/Rules/master/Quantumult/X/Images/Task/suning.png, enabled=true
+#京东汽车兑换
+*/10 * * * * https://raw.githubusercontent.com/Sunert/Scripts/master/Task/jukan.js, tag=聚看点, enabled=true
+#京东看一看
+#京东健康
+#直播红包雨
+17 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/rrtv/rrtv.js, tag=人人视频, img-url=https://raw.githubusercontent.com/Orz-3/task/master/rrtv.png, enabled=true
+* * * * * https://raw.githubusercontent.com/chavyleung/scripts/master/box/switcher/box.switcher.js, tag=切换会话, img-url=https://raw.githubusercontent.com/Orz-3/task/master/box.png, enabled=false
+0 0 * * * https://raw.githubusercontent.com/crossutility/Quantumult-X/master/sample-task.js, tag=Sample, img-url=https://raw.githubusercontent.com/crossutility/Quantumult-X/master/quantumult-x.png, enabled=false
+#京喜财富岛
+#企鹅阅读
+#京喜工厂
+#京东工厂
+#东东小窝
+# 京东多合一签到
+# 注意此为远程路径, 低版本用户请自行调整为本地路径.
+5 0,23 * * * https://raw.githubusercontent.com/NobyDa/Script/master/JD-DailyBonus/JD_DailyBonus.js, tag=京东多合一签到, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+#东东农场
+
+#东东萌宠
+
+# 种豆得豆
+
+#天天加速
+
+#京东摇钱树
+
+#京东宠汪汪
+
+#宠汪汪偷好友积分与狗粮
+
+#京东宠汪汪喂食
+
+#宠汪汪积分兑换奖品
+
+# 宠汪汪邀请助力与赛跑助力
+ 
+#京小超
+
+#京小超兑换奖品
+
+#进店领豆
+
+#摇京豆
+
+#京东全民开红包
+
+#京豆变动通知
+
+#取关京东店铺商品
+
+
+;* * * * * sample-task.js
+;* * * * * sample-task2.js, img-url=https://raw.githubusercontent.com/crossutility/Quantumult-X/master/quantumult-x.png, tag=Sample, enabled=true
+
+
+#
+# Deploy a local HTTP server and use JavaScript for data processing.
+# The input variables are $reqeust.url, $reqeust.path, $reqeust.headers, $reqeust.body
+# The output using $done like $done({status:"HTTP/1.1 200 OK"}, headers:{}, body:"here is a string") to sendback the response.
+# Further more you can use a signature or any other validation method to verify if the request is legitimate.
+# After the deployment you should visit it through http://127.0.0.1:9999/your-path/your-api/.
+#
+[http_backend]
+;https://raw.githubusercontent.com/crossutility/Quantumult-X/master/sample-backend.js, tag=fileConverter, path=^/example/v1/
+;preference.js, tag=userPreference, path=^/preference/v1/, img-url=https://example.com, enabled=true
+;convert.js, tag=fileConverter, path=^/convert/v1/
+
+
+#
+# Only the TLS SNI or destination address in "hostname" will be handled by MitM.
+#
+# By default when MitM enabled for the HTTPS request, Quantumult X fetches the certificate(the certificate will be cached) from the original site, keeps most of the needed original certificate informations and re-signs it using the MitM root CA, this is the recommended(and more compatible) way of creating MitM certificate.
+# Occasionally some users like to debug the HTTPS request that its domain does not exist, so the original certificate doesn't even exist. This is when the param simple_cert_hostname comes up. The HTTPS request with TLS SNI names that are in the simple_cert_hostname(and hostname) will using the pure local generated MitM  certificate.
+#
+# Important !!! You should always keep your CA passphrase and p12 private.
+#
+[mitm]
