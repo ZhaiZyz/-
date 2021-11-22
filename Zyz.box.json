@@ -1,3 +1,8 @@
+"id": "xl2101200.app.sub",
+  "name": "tom 脚本订阅",
+  "author": "@tom",
+  "icon": "https://raw.githubusercontent.com/xl2101200/-/main/tom/tom.png",
+  "repo": "https://github.com/ZhaiZyz/-",
 "id": "jztt",
   "name": "九章头条",
   "keys": ["jztturl", "jztturl2", "jztturl3", "jztturl4", "jztturl5", "jztturl6", "jztturl7", "jztturl8", "jztturl9", "jztturl10", "jztturl11", "jztturl12", "jztturl13", "jztturl14", "jztturl15", "jztturl16", "jztturl17", "jztturl18", "jztturl19", "jztturl20"],
